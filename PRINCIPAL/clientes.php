@@ -15,6 +15,47 @@
     <link rel="stylesheet" href="css/style_clientes.css">
     <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
     <title>CarPrime</title> 
+    <style>
+        table{
+            border: none;
+            color: black;
+            background: none;
+        }
+
+        tr:hover{
+            color: #fff;
+            background: #1E90FF;
+        }
+
+        td{
+            border: none;
+            padding: 5px;
+        }
+
+        .tbl{
+            border: 1px solid black
+        }
+
+        input{
+            float: left;
+            margin: auto;
+            margin-left: 5px;
+        
+        }
+
+        input:hover{
+            transform: scale(1,1.1);
+        }
+
+        .bt1{ 
+            width: 200px;
+            color: black;
+            border: solid 1px;
+        }
+
+
+        
+    </style>
 </head>
 <body>
     <nav class="sidebar close">
@@ -100,19 +141,36 @@
     
     <section class="home">
     <div id="conteudo">
-
     <form id="wrap" style="text-decoration: none; border: none" action="clientes.php" method="post">
-        <input type="text" placeholder="Nome:" style="height: 32px" name="nome">&nbsp;&nbsp;
-        <input type="text" placeholder="CPF" style="height: 32px" name="cpf">&nbsp;&nbsp;
-        <input type="text" placeholder="email" style="height: 32px" name="email"><br><br>
-        <input type="text" placeholder="Endereço" style="height: 32px" name="endereco">&nbsp;&nbsp;
-        <input type="date" placeholder="Data de Nascimento" style="height: 32px" name="dt_nasc">&nbsp;&nbsp;
-        <input type="text" placeholder="Telefone" style="height: 32px" name="telefone">
+
+        <input type="text" placeholder="Nome:" style="height: 32px" name="nome" class="form-control" aria-label="Username" aria-describedby="basic-addon1">&nbsp;&nbsp;
+        <input type="text" placeholder="CPF" style="height: 32px" name="cpf" class="form-control" aria-label="Username" aria-describedby="basic-addon1">&nbsp;&nbsp;
+        <input type="text" placeholder="email" style="height: 32px" name="email" class="form-control" aria-label="Username" aria-describedby="basic-addon1"><br><br>
+        <input type="text" placeholder="Endereço" style="height: 32px" name="endereco" class="form-control" aria-label="Username" aria-describedby="basic-addon1">&nbsp;&nbsp;
+        <input type="date" placeholder="Data de Nascimento" style="height: 32px" name="dt_nasc" class="form-control" aria-label="Username" aria-describedby="basic-addon1">&nbsp;&nbsp;
+        <input type="text" placeholder="Telefone" style="height: 32px" name="telefone" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
         <br/><br/>
-        <input type="submit" name="valida" value="Enviar">
+        <button type="submit" class="btn btn-outline-primary bt1" name="valida">Enviar</button>
 </form>
 
-<?php
+    <div id="saida" style="text-decoration: none; border: none">
+        <table width="100%;">
+            <tr class="tbl">
+                <td>
+                    <h4>Nome</h4>
+                </td>
+                <td>
+                    <h4>CPF</h4>
+                </td>
+                <td>
+                    <h4>EMAIL</h4>
+                </td>
+                <td>
+                    <h4></h4>
+                </td>
+            </tr>
+            <hr/>
+            <?php
     //puxar dados do formulario
 
     include 'conn.php';
@@ -133,24 +191,30 @@
         $gravar -> execute();
     }
 
+    //exibir todos os resultados na tabela
+    
+        $exibir_resultados = $conn -> prepare('SELECT * FROM `clientes`');
+        $exibir_resultados -> execute();
+            while($row = $exibir_resultados->fetch()){
+                echo "<tr class='tbl'>";
+                echo "<td>".$row['nm_cliente']."</td>";
+                echo "<td>".$row['cpf_cliente']."</td>";
+                echo "<td>".$row['email_cliente']."</td>";
+                echo "<td><a href='clientes.php?aviso&id= ".$row['id_cliente']."&nome=".$row['nm_cliente']."'>Excluir</a></td>";
+                echo '<tr>';
+            }
+
+        // aviso de exclusao
+
+        if(isset($_GET['aviso'])){
+            $id=$_GET['id'];
+            $nome = $_GET['nome'];
+            echo "<h4>Deseja realmente excluir ".$nome."?</h4>";
+            echo "<h4><a href='clientes.php?excluir&id=$id&nome=$nome'>Sim</a>"."&nbsp"."&nbsp"."<a href='clientes.php'>Não</a></h4>";
+        }
+
 ?>
 
-
-    <div id="saida" style="text-decoration: none; border: none">
-        <table width="100%" height="50px%">
-            <tr style="border-radius: 5px; text-align: center">
-            
-                <td>
-                    <b>Nome</b>
-                </td>
-                <td>
-                    <b>CPF</b>
-                </td>
-                <td>
-                    <b>EMAIL</b>
-                </td>
-            </tr>
-            
         </table>
     </div>
     <script src="js/script_clientes.js"></script>
