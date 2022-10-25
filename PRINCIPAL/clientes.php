@@ -191,6 +191,26 @@
         $gravar -> execute();
     }
 
+    // aviso de exclusao
+
+    if(isset($_GET['aviso'])){
+        $id=$_GET['id'];
+        $nome = $_GET['nome'];
+        echo "<h4>Deseja realmente excluir ".$nome."?</h4>";
+        echo "<h4><a href='clientes.php?excluir&id=$id&nome=$nome'>Sim</a>"."&nbsp"."&nbsp"."<a href='clientes.php'>Não</a></h4>";
+    }
+
+    //exclusao definitiva
+
+    if(isset($_GET['excluir'])){
+        $id=$_GET['id'];
+        $nome = $_GET['nome'];
+        $excluir = $conn -> prepare('DELETE FROM clientes WHERE `clientes`.`id_cliente` = ?');
+        $excluir -> bindParam(1, $id);
+        $excluir -> execute();
+        echo "<h4>".$nome." excluido com sucesso!</h4>";
+    }
+
     //exibir todos os resultados na tabela
     
         $exibir_resultados = $conn -> prepare('SELECT * FROM `clientes`');
@@ -203,15 +223,6 @@
                 echo "<td><a href='clientes.php?aviso&id= ".$row['id_cliente']."&nome=".$row['nm_cliente']."'>Excluir</a></td>";
                 echo '<tr>';
             }
-
-        // aviso de exclusao
-
-        if(isset($_GET['aviso'])){
-            $id=$_GET['id'];
-            $nome = $_GET['nome'];
-            echo "<h4>Deseja realmente excluir ".$nome."?</h4>";
-            echo "<h4><a href='clientes.php?excluir&id=$id&nome=$nome'>Sim</a>"."&nbsp"."&nbsp"."<a href='clientes.php'>Não</a></h4>";
-        }
 
 ?>
 
