@@ -7,13 +7,13 @@
     
     <!----======== CSS ======== -->
     <link rel="stylesheet" href="css/style.css">
-    
+         
     <!----===== Boxicons CSS ===== -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style_clientes.css">
-    <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <title>CarPrime</title> 
     <style>
         table{
@@ -33,7 +33,7 @@
         }
 
         .tbl{
-            border: 1px solid black
+            border: solid 1px black;
         }
 
         input{
@@ -51,6 +51,12 @@
             width: 200px;
             color: black;
             border: solid 1px;
+        }
+
+
+        .inp{
+            width: 300px;
+            height: 150px;
         }
 
 
@@ -116,7 +122,7 @@
 
             <div class="bottom-content">
                 <li class="">
-                    <a href="../login/login.php">
+                    <a href="login.php">
                         <i class='bx bx-log-out icon'></i>
                         <span class="text nav-text">Logout</span>
                     </a>
@@ -154,21 +160,22 @@
 </form>
 
     <div id="saida" style="text-decoration: none; border: none">
-        <table width="100%;">
-            <tr class="tbl">
-                <td>
-                    <h4>Nome</h4>
-                </td>
-                <td>
-                    <h4>CPF</h4>
-                </td>
-                <td>
-                    <h4>EMAIL</h4>
-                </td>
-                <td>
-                    <h4></h4>
-                </td>
+       
+         <table class="table tbl">
+          <thead  class="table-dark text-light" id="tb">
+            <tr style="text-decoration: none;">
+              <th scope="col" ><h4>Nome</h4></th>
+              <th scope="col" ><h4>CPF</th>
+              <th scope="col" ><h4>Email</th>
+              <th scope="col" ><h4>Endereço</th>
+              <th scope="col" ><h4>Data de Nascimento</th>
+              <th scope="col" ><h4>Telefone</th>
+               <th scope="col" ></th>
+               <th scope="col" ></th>
             </tr>
+          </thead>
+
+
             <hr/>
             <?php
     //puxar dados do formulario
@@ -181,6 +188,8 @@
         $endereco = $_POST['endereco'];
         $dt_nasc = $_POST['dt_nasc'];
         $telefone = $_POST['telefone'];
+
+        try{
         $gravar = $conn -> prepare('INSERT INTO `clientes` (`id_cliente`, `nm_cliente`, `cpf_cliente`, `email_cliente`, `ds_endereco`, `dt_nascimento`, `nm_telefone`) VALUES (NULL, ?, ?, ?, ?, ?, ?);');
         $gravar -> bindParam(1, $nome);
         $gravar -> bindParam(2, $cpf);
@@ -189,7 +198,15 @@
         $gravar -> bindParam(5, $dt_nasc);
         $gravar -> bindParam(6, $telefone);
         $gravar -> execute();
+        echo "<h4>".$nome." Cadastrado com Sucesso</h4>";
+
+        }catch(PDOException $e){
+            echo "<h4>Houve um erro ao efetuar o cadastro, por favor verifique os dados e tente novamente!</h4>";
+        }
+    
     }
+
+
 
     // aviso de exclusao
 
@@ -215,14 +232,73 @@
     
         $exibir_resultados = $conn -> prepare('SELECT * FROM `clientes`');
         $exibir_resultados -> execute();
+            echo '<tbody>';
             while($row = $exibir_resultados->fetch()){
-                echo "<tr class='tbl'>";
+                echo "<tr class='tbl2' class='cor' style='top: 50px'>";
                 echo "<td>".$row['nm_cliente']."</td>";
                 echo "<td>".$row['cpf_cliente']."</td>";
                 echo "<td>".$row['email_cliente']."</td>";
+                echo "<td>".$row['ds_endereco']."</td>";
+                $DataNasc = new DateTime($row['dt_nascimento']);
+                echo "<td>".$DataNasc->format('d/m/Y')."</td>";
+                echo "<td>".$row['nm_telefone']."</td>";
                 echo "<td><a href='clientes.php?aviso&id= ".$row['id_cliente']."&nome=".$row['nm_cliente']."'>Excluir</a></td>";
+                echo "<td><a href='clientes.php?avisoalterar&id= ".$row['id_cliente']."&nome=".$row['nm_cliente']."'>Alterar</a></td>";
                 echo '<tr>';
             }
+        echo '</tbody>';
+
+
+        //Alteração
+    if(isset($_GET['avisoalterar'])){
+        $id = intVal($_GET['id']);
+        $nome = $_GET['nome'];
+        $alterar = $conn -> prepare('SELECT * FROM `clientes` WHERE `id_cliente`= ?;');
+        $alterar -> bindValue(1, $id);
+        $alterar -> execute();
+        $row = $alterar -> fetch();
+
+        ?>  
+
+    <form action="clientes.php" method="POST">  
+        <Input type="hidden" class="inp" name="id" value="<?php echo $row['id_cliente'];?>"/>
+        <Input type="text" class="inp" name="nome" value="<?php echo $row['nm_cliente']; ?>"/>
+        <Input type="text"  class="inp" name="cpf" value="<?php echo $row['cpf_cliente']; ?>"/>
+        <Input type="text"  class="inp" name="email" value="<?php echo $row['email_cliente']; ?>"/>
+        <Input type="text"  class="inp" name="endereco" value="<?php echo $row['ds_endereco']; ?>"/>
+        <Input type="text"  class="inp" name="dt_nasc" value="<?php echo $row['dt_nascimento']; ?>"/>
+        <Input type="text"  class="inp" name="telefone" value="<?php echo $row['nm_telefone']; ?>"/>
+        <Input type="submit" name="altera" value="Alterar" class="bt1" id="btn1"/>
+    </form>
+   
+    </br>
+    </br>
+  
+        <?php
+    }
+    if(isset($_POST['altera'])){
+        $id = $_POST['id'];
+        $nome = $_POST['nome'];
+        $cpf = $_POST['cpf'];
+        $email = $_POST['email'];
+        $endereco = $_POST['endereco'];
+        //$dt_nascimento = $_POST['dt_nasc'];
+        $dt_nasci=new DateTime($_POST['dt_nasc']);
+        $dt_nasc=$dt_nasci->format('Y/m/d');
+        $telefone = $_POST['telefone'];
+        $alterar = $conn -> prepare('UPDATE `clientes` SET `nm_cliente` = ?, `cpf_cliente` = ?, `email_cliente` = ?, `ds_endereco` = ?, `dt_nascimento` = ?, `nm_telefone` = ? WHERE `clientes`.`id_cliente` = ?;');
+        $alterar -> bindValue(1, $nome);
+        $alterar -> bindValue(2, $cpf);
+        $alterar -> bindValue(3, $email);
+        $alterar -> bindValue(4, $endereco);
+        $alterar -> bindValue(5, $dt_nasc);
+        $alterar -> bindValue(6, $telefone);
+        $alterar -> bindValue(7, $id);
+        $alterar -> execute();
+        echo "<h4>Alterado com sucesso!</h4>";
+
+    }
+
 
 ?>
 
@@ -233,4 +309,24 @@
 
 
 </body>
+<script>
+    $(document).ready(()=>{
+        $('.inp').css({'width':'150px','height':'30px','padding':'5px','margin-left':'20px','border-radius':'5px','border':'transparent'});
+
+        $('#btn1').css({'width':'100px','height':'30px','margin-left':'20px','border-radius':'5px','text-align':'center'});
+
+        $('#tb').css({'width':'90%','height':'10px'});
+
+        $('#btn1').mouseover(()=>{
+            $('#btn1').css({'color':'blue'});
+        })
+
+        $('#btn1').mouseout(()=>{
+            $('#btn1').css({'color':'black'});
+        })
+        
+
+
+    });
+</script>
 </html>

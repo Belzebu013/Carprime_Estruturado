@@ -94,7 +94,7 @@
 
             <div class="bottom-content">
                 <li class="">
-                    <a href="../login/login.php">
+                    <a href="login.php">
                         <i class='bx bx-log-out icon' ></i>
                         <span class="text nav-text">Logout</span>
                     </a>
@@ -332,7 +332,8 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"clickTo","qid":"1","text":"FORMULAR
                 <div id="cid_68" class="form-input-wide jf-required">
                   <select class="form-dropdown validate[required]" id="input_68" name="q68_escolhaA" style="width:150px" data-component="dropdown" required="">
                     <option value="">  </option>
-                    <option value="CLIENTE"> CLIENTE </option>
+                    <option value="" id="cliente_cad"> CLIENTE </option>
+                    <option value="" id="veiculo"> VEICULO </option>
                   </select>
                 </div>
               </li>
@@ -828,6 +829,21 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"clickTo","qid":"1","text":"FORMULAR
 
 
     <script src="js/script.js"></script>
+  
 
 </body>
+<script>
+        $(document).ready(()=>{
+            //$('section').addClass('bg-light');
+
+            $('#cliente').click(()=>{
+                $.get('cliente_cad.php', data=>{
+                    $('body').html(data);
+                });
+            })
+
+        })
+
+    </script>
+
 </html>

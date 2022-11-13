@@ -31,6 +31,35 @@ a:link {
 	padding: 10px 40px 0px 40px;
 }
 
+.tbl2:hover{
+	background-color: #1E90FF;
+	color: #fff;
+}
+
+h4{
+	text-align: center;
+}
+
+.cor{
+	background-color: #dddddd;
+}
+
+.tbl{
+	text-align: center;
+	width: 90%;
+	margin: auto;
+	border: 1px solid;
+}
+
+
+
+.tbl{
+	text-align: center;
+	width: 90%;
+	margin: auto;
+	border: 1px solid;
+}
+
 /* Bootstrap navbar */
 
 @media only screen and (max-width 600px) {
@@ -46,6 +75,8 @@ a:link {
 	.form-control {
 		width: 100%;
 	}
+
+
 
 
 }

@@ -101,226 +101,36 @@
         <div class="container">
             <div class="row">
                 <!-- Card 1-->
+              <?php
+                require 'conn.php';
+                $query='SELECT * FROM veiculos;';
+                $exib_car=$conn->prepare($query);
+                $exib_car->execute();
+                while($row=$exib_car->fetch()){
+
+
+              ?>
                 <div class="col">
                     <div class="card" style="width: 15em; border-radius: 10px;">
-                        <img src="imagens/civic.jpg" class="card-img-top" alt="Honda Civic">
+                        <img src="<?php  echo $row['url_veiculo']; ?>" class="card-img-top" alt="Honda Civic">
                         <div class="card-body">
-                          <h5 class="card-title">HONDA CIVIC</h5>
+                          <h5 class="card-title"><?php  echo $row['nm_veiculo']; ?></h5>
                           <p class="card-text">
-                            1.5 16v turbo<br>
-                            Gasolina<br>
-                            4p<br>
-                            88.000 km<br>
-                            Automático 
+                          <?php  echo $row['ds_veiculo']; ?><br>
+                          <?php  echo $row['combustivel']; ?><br>
+                          <?php  echo $row['nm_portas']."p"; ?><br>
+                          <?php  echo $row['km_rodados']." Km"; ?><br>
+                          <?php  echo $row['transmissao']; ?>
                           </p>
                           <a href="#" class="btn btn-primary">Acessar</a>
                         </div>
                       </div>
-                </div>
-                <!-- Card 2-->
-                <div class="col">
-                    <div class="card" style="width: 15em; border-radius: 10px">
-                        <img src="imagens/hilux.jpg" class="card-img-top" alt="Land Hover Discovery">
-                        <div class="card-body">
-                          <h5 class="card-title">TOYOTA HILUX</h5>
-                          <p class="card-text">
-                            2.8 SRV 4X4 CD 16V<br>
-                            Diesel<br>
-                            4p<br>
-                            60.000 km <br>
-                            Automático
-                          </p>
-                          <a href="#" class="btn btn-primary">Acessar</a>
-                        </div>
-                      </div>
-                </div>
-                <!-- Card 3-->
-                <div class="col">
-                    <div class="card" style="width: 15em; border-radius: 10px">
-                        <img src="imagens/fox.jpg" class="card-img-top" alt="VOLKSWAGEN FOX
-                        ">
-                        <div class="card-body">
-                          <h5 class="card-title">VOLKSWAGEN FOX
-                        </h5>
-                          <p class="card-text">
-                            1.6 MSI COMFORTLINE 8V<br>
-                            Flex<br>
-                            4p<br>
-                            50.000 km<br>
-                            Manual 
-                          </p>
-                          <a href="#" class="btn btn-primary">Acessar</a>
-                        </div>
-                      </div>
-                </div>
-                <!-- Card 4-->
-                <div class="col">
-                    <div class="card" style="width: 15em; border-radius: 10px">
-                        <img src="imagens/palio.jpg" class="card-img-top" alt="FIAT PALIO
-                        ">
-                        <div class="card-body">
-                          <h5 class="card-title">FIAT PALIO
-                        </h5>
-                          <p class="card-text">
-                            1.0 MPI FIRE 8V <br>
-                            Flex<br>
-                            2p<br>
-                            2011 km<br>
-                            Manual 
-                          </p>
-                          <a href="#" class="btn btn-primary">Acessar</a>
-                        </div>
-                      </div>
-                </div>
+                      <br/>
+                </div>  
+              <?php
+                }
+              ?>
                 
-            </div>
-            <br>
-            <!--Linha 2-->
-            <div class="row">
-                 <!-- Card 1-->
-                 <div class="col">
-                    <div class="card" style="width: 15em; border-radius: 10px">
-                        <img src="imagens/onix.jpg" class="card-img-top" alt="CHEVROLET ONIX                        ">
-                        <div class="card-body">
-                          <h5 class="card-title">CHEVROLET ONIX                        </h5>
-                          <p class="card-text">
-                            1.0 LT<br>
-                            Flex<br>
-                            4p<br>
-                            26.540 km<br>
-                            Manual 
-                          </p>
-                          <a href="#" class="btn btn-primary">Acessar</a>
-                        </div>
-                      </div>
-                </div>
-                <!-- Card 2-->
-                <div class="col">
-                    <div class="card" style="width: 15em; border-radius: 10px">
-                        <img src="imagens/Audi_a3.jpg" class="card-img-top" alt="AUDI A3                        ">
-                        <div class="card-body">
-                          <h5 class="card-title">AUDI A3</h5>
-                          <p class="card-text">
-                            1.4 TFSI 16V<br>
-                            Flex<br>
-                            4p<br>
-                            58.616 km <br>
-                            Automático
-                          </p>
-                          <a href="#" class="btn btn-primary">Acessar</a>
-                        </div>
-                      </div>
-                </div>
-                <!-- Card 3-->
-                <div class="col">
-                    <div class="card" style="width: 15em; border-radius: 10px">
-                        <img src="imagens/cruze.jpg" class="card-img-top" alt="CHEVROLET CRUZE">
-                        <div class="card-body">
-                          <h5 class="card-title">CHEVROLET CRUZE</h5>
-                          <p class="card-text">
-                            1.4 TURBO 16V<br>
-                            Flex<br>
-                            4p<br>
-                            0 km<br>
-                            Manual 
-                          </p>
-                          <a href="#" class="btn btn-primary">Acessar</a>
-                        </div>
-                      </div>
-                </div>
-                <!-- Card 4-->
-                <div class="col">
-                    <div class="card" style="width: 15em; border-radius: 10px">
-                        <img src="imagens/hyunday_hr.jpg" class="card-img-top" alt="HYUNDAI HR                        ">
-                        <div class="card-body">
-                          <h5 class="card-title">HYUNDAI HR </h5>
-                          <p class="card-text">
-                            2.5 4X2 16V<br>
-                            Diesel<br>
-                            2p<br>
-                            0 km<br>
-                            Manual 
-                          </p>
-                          <a href="#" class="btn btn-primary">Acessar</a>
-                        </div>
-                      </div>
-                </div>
-            </div>
-            <br>
-            <!--Linha 3-->
-            <div class="row">
-                 <!-- Card 1-->
-                 <div class="col">
-                    <div class="card" style="width: 15em; border-radius: 10px">
-                        <img src="imagens/mini_cooper.jpg" class="card-img-top" alt="MINI COOPER                        ">
-                        <div class="card-body">
-                          <h5 class="card-title">MINI COOPER                        </h5>
-                          <p class="card-text">
-                            2.0 16V TURBO<br>
-                            Gasolina<br>
-                            2p<br>
-                            27.190 km<br>
-                            Automático 
-                          </p>
-                          <a href="#" class="btn btn-primary">Acessar</a>
-                        </div>
-                      </div>
-                </div>
-                <!-- Card 2-->
-                <div class="col">
-                    <div class="card" style="width: 15em; border-radius: 10px">
-                        <img src="imagens/cayenne.jpg" class="card-img-top" alt="PORSCHE CAYENNE                        ">
-                        <div class="card-body">
-                          <h5 class="card-title">PORSCHE CAYENNE                        </h5>
-                          <p class="card-text">
-                            4.8 S 4X4 V8 32V<br>
-                            Gasolina<br>
-                            4p<br>
-                            93.000 km <br>
-                            Automático
-                          </p>
-                          <a href="#" class="btn btn-primary">Acessar</a>
-                        </div>
-                      </div>
-                </div>
-                <!-- Card 3-->
-                <div class="col">
-                    <div class="card" style="width: 15em; border-radius: 10px">
-                        <img src="imagens/corsa.jpg" class="card-img-top" alt="CHEVROLET CORSA                        ">
-                        <div class="card-body">
-                          <h5 class="card-title">CHEVROLET CORSA</h5>
-                          <p class="card-text">
-                            1.4 MPFI MAXX 8V<br>
-                            Flex<br>
-                            4p<br>
-                            127.000 km<br>
-                            Manual 
-                          </p>
-                          <a href="#" class="btn btn-primary">Acessar</a>
-                        </div>
-                      </div>
-                </div>
-                <!-- Card 4-->
-                <div class="col">
-                    <div class="card" style="width: 15em; border-radius: 10px">
-                        <img src="imagens/master.jpg" class="card-img-top" alt="RENAULT MASTER                        ">
-                        <div class="card-body">
-                          <h5 class="card-title">RENAULT MASTER</h5>
-                          <p class="card-text">
-                            2.3 EXTRA FURGÃO L3H2<br>
-                            Diesel<br>
-                            3p<br>
-                            269.100 km<br>
-                            Manual 
-                          </p>
-                          <a href="#" class="btn btn-primary">Acessar</a>
-                        </div>
-                      </div>
-                </div>
-            </div>
-        </div>
-
-
     </section>
     <script src="js/script.js"></script>
 

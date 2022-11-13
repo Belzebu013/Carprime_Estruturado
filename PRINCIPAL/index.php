@@ -16,7 +16,9 @@
     <!----===== Boxicons CSS ===== -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">   
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  
     
     <title>CarPrime</title> 
     <style>
@@ -26,6 +28,10 @@
     </style>
 </head>
 <body>
+
+<?php session_start();?>
+
+
     <nav class="sidebar close">
         <header>
             <div class="image-text">
@@ -86,7 +92,17 @@
 
             <div class="bottom-content">
                 <li class="">
-                    <a href="../principal/login.php">
+                    <?php
+                    
+                        //realizar logout
+                        if(isset($_GET['logout'])){
+                            session_destroy();
+                            header('location:login.php');
+                    
+                        }
+
+                    ?>
+                    <a href="index.php?logout">
                         <i class='bx bx-log-out icon' ></i>
                         <span class="text nav-text">Logout</span>
                     </a>
@@ -110,6 +126,7 @@
     </nav>    
 
     <section class="container-fluid home size-content">
+        
     
              <!-- Content Wrapper -->
              <div id="content-wrapper" class="d-flex flex-column">
@@ -234,9 +251,9 @@
                             <li class="nav-item dropdown no-arrow">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Usuário</span>
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['nome'];?></span>
                                     <img class="img-profile rounded-circle"
-                                        src="imagens/foto-user.svg">
+                                        src="imagens/foto-user.svg" id="img_user">
                                 </a>
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -273,9 +290,9 @@
     
                         <!-- Page Heading -->
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                    class="fas fa-download fa-sm text-white-50"></i> Download Relatório</a>
+                            <h1 class="h3 mb-0 text-gray-800" id="dash"><?php echo "Seja bem vindo ".$_SESSION['nome']."!";  ?></h1>
+                            <a href="../arquivos/vendas.pdf" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_blank"><i
+                                    class="fas fa-download fa-sm text-white-50"></i> Relatório Mensal</a>
                         </div>
     
                         <!-- Content Row -->
@@ -289,7 +306,14 @@
                                             <div class="col mr-2">
                                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     Total Vendas (Mês)</div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800">R$40,000</div>
+                                                    <!-- Total de vendas -->
+                                                    <?php        
+                                                        require 'conn.php';
+                                                        $vendas = $conn->prepare("SELECT count(*) as total_vendas from `vendas` WHERE `dt_venda` BETWEEN '2022-11-01' AND '2022-11-30';");
+                                                        $vendas->execute();
+                                                        $row=$vendas->fetch();
+                                                    ?>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $row['total_vendas'];  ?></div>
                                             </div>
                                             <div class="col-auto">
                                                 <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -307,7 +331,16 @@
                                             <div class="col mr-2">
                                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                     Vendas (Anual)</div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800">R$215,000</div>
+
+                                                    <!-- Exibir Valor Total de vendas no ano -->
+                                                    <?php
+                                                        $query=("SELECT sum(vl_venda) as total_vendas_ano from `vendas` WHERE `dt_venda` BETWEEN '2022-01-01' AND '2022-12-31';");
+                                                        $vendas_ano = $conn->prepare($query);
+                                                        $vendas_ano->execute();
+                                                        $row=$vendas_ano->fetch();
+
+                                                    ?>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?= 'R$ '.$row['total_vendas_ano']; ?></div>
                                             </div>
                                             <div class="col-auto">
                                                 <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -323,16 +356,21 @@
                                     <div class="card-body">
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
-                                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tarefas
-                                                </div>
+                                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Lucro Mensal</div>
+                                                <?php
+                                                    $query=("SELECT sum(vl_venda-vl_compra) as lucro_mensal from `vendas` WHERE `dt_venda` BETWEEN '2022-11-01' AND '2022-11-30';");
+                                                    $lucro_mensal = $conn->prepare($query);
+                                                    $lucro_mensal->execute();
+                                                    $row=$lucro_mensal->fetch();
+                                                ?>
                                                 <div class="row no-gutters align-items-center">
                                                     <div class="col-auto">
-                                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?= 'R$ '.$row['lucro_mensal'] ?></div>
                                                     </div>
                                                     <div class="col">
                                                         <div class="progress progress-sm mr-2">
                                                             <div class="progress-bar bg-info" role="progressbar"
-                                                                style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                                                                style="width: 25%" aria-valuenow="20" aria-valuemin="20
                                                                 aria-valuemax="100"></div>
                                                         </div>
                                                     </div>
@@ -353,8 +391,17 @@
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
                                                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                    Solicitações pendendentes</div>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                                    Lucro Anual</div>
+
+                                                    <!-- Valor Lucro Anual de Vendas-->
+                                                    <?php
+                                                        $query=("SELECT sum(vl_venda-vl_compra) as Lucro_anual from `vendas` WHERE `dt_venda` BETWEEN '2022-01-01' AND '2022-12-31';");
+                                                        $Lucro_anual = $conn->prepare($query);
+                                                        $Lucro_anual->execute();
+                                                        $row=$Lucro_anual->fetch();
+
+                                                    ?>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?= 'R$ '.$row['Lucro_anual'] ?></div>
                                             </div>
                                             <div class="col-auto">
                                                 <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -489,12 +536,21 @@
                                 </div>
     
                                 <!-- Color System -->
+                                <!-- Numero de vendas por vendedor -->
                                 <div class="row">
                                     <div class="col-lg-6 mb-4">
                                         <div class="card bg-primary text-white shadow">
                                             <div class="card-body">
                                                 Roberto
-                                                <div class="text-white-50 small">4 Veículos vendidos</div>
+                                                <div class="text-white-50 small">
+                                                <?php
+                                                    $query=("SELECT count(*) as vendas FROM `vendas` WHERE Funcionario = 'Roberto';");
+                                                    $num_vendas=$conn->prepare($query);
+                                                    $num_vendas->execute();
+                                                    $row=$num_vendas->fetch();
+                                                    echo $row['vendas'];
+                                                ?>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -502,7 +558,15 @@
                                         <div class="card bg-success text-white shadow">
                                             <div class="card-body">
                                                 Fernanda
-                                                <div class="text-white-50 small">2 Veículos vendidos</div>
+                                                <div class="text-white-50 small">
+                                                <?php
+                                                    $query=("SELECT count(*) as vendas FROM `vendas` WHERE Funcionario = 'Fernanda';");
+                                                    $num_vendas=$conn->prepare($query);
+                                                    $num_vendas->execute();
+                                                    $row=$num_vendas->fetch();
+                                                    echo $row['vendas'];
+                                                ?>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -510,7 +574,15 @@
                                         <div class="card bg-info text-white shadow">
                                             <div class="card-body">
                                                 Rafael
-                                                <div class="text-white-50 small">15 Veículos vendidos</div>
+                                                <div class="text-white-50 small">
+                                                <?php
+                                                    $query=("SELECT count(*) as vendas FROM `vendas` WHERE Funcionario = 'Rafael';");
+                                                    $num_vendas=$conn->prepare($query);
+                                                    $num_vendas->execute();
+                                                    $row=$num_vendas->fetch();
+                                                    echo $row['vendas'];
+                                                ?>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -518,7 +590,15 @@
                                         <div class="card bg-warning text-white shadow">
                                             <div class="card-body">
                                                 Leticia
-                                                <div class="text-white-50 small">12 Veículos vendidos</div>
+                                                <div class="text-white-50 small">
+                                                <?php
+                                                    $query=("SELECT count(*) as vendas FROM `vendas` WHERE Funcionario = 'Leticia';");
+                                                    $num_vendas=$conn->prepare($query);
+                                                    $num_vendas->execute();
+                                                    $row=$num_vendas->fetch();
+                                                    echo $row['vendas'];
+                                                ?>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -526,7 +606,15 @@
                                         <div class="card bg-danger text-white shadow">
                                             <div class="card-body">
                                                 Daniel
-                                                <div class="text-white-50 small">8 Veículos vendidos</div>
+                                                <div class="text-white-50 small">
+                                                <?php
+                                                    $query=("SELECT count(*) as vendas FROM `vendas` WHERE Funcionario = 'Daniel';");
+                                                    $num_vendas=$conn->prepare($query);
+                                                    $num_vendas->execute();
+                                                    $row=$num_vendas->fetch();
+                                                    echo $row['vendas'];
+                                                ?>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -534,7 +622,15 @@
                                         <div class="card bg-secondary text-white shadow">
                                             <div class="card-body">
                                                 Renato
-                                                <div class="text-white-50 small">16 Veículos vendidos</div>
+                                                <div class="text-white-50 small">
+                                                <?php
+                                                    $query=("SELECT count(*) as vendas FROM `vendas` WHERE Funcionario = 'Renato';");
+                                                    $num_vendas=$conn->prepare($query);
+                                                    $num_vendas->execute();
+                                                    $row=$num_vendas->fetch();
+                                                    echo $row['vendas'];
+                                                ?>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -542,7 +638,15 @@
                                         <div class="card bg-light text-black shadow">
                                             <div class="card-body">
                                                 Aline
-                                                <div class="text-black-50 small">14 Veículos vendidos</div>
+                                                <div class="text-black-50 small">
+                                                <?php
+                                                    $query=("SELECT count(*) as vendas FROM `vendas` WHERE Funcionario = 'Aline';");
+                                                    $num_vendas=$conn->prepare($query);
+                                                    $num_vendas->execute();
+                                                    $row=$num_vendas->fetch();
+                                                    echo $row['vendas'];
+                                                ?>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -550,12 +654,20 @@
                                         <div class="card bg-dark text-white shadow">
                                             <div class="card-body">
                                                 Fernando
-                                                <div class="text-white-50 small">10 Veículos vendidos</div>
+                                                <div class="text-white-50 small">
+                                                <?php
+                                                    $query=("SELECT count(*) as vendas FROM `vendas` WHERE Funcionario = 'Fernando';");
+                                                    $num_vendas=$conn->prepare($query);
+                                                    $num_vendas->execute();
+                                                    $row=$num_vendas->fetch();
+                                                    echo $row['vendas'];
+                                                   
+                                                ?>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-    
                             </div>
     
                             <div class="col-lg-6 mb-4">
@@ -608,7 +720,7 @@
             </div>
             <!-- End of Content Wrapper -->
 
-        
+            
     </section>
 
     
@@ -626,4 +738,18 @@
 
 
 </body>
+    <script>
+        $(document).ready(()=>{
+            //$('section').addClass('bg-light');
+
+            $('#img_user').click(()=>{
+                $.get('index.php', data=>{
+                    $('body').html(data);
+                });
+            })
+
+        })
+
+    </script>
+
 </html>
