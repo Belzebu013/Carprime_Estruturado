@@ -63,9 +63,9 @@
                     </li>
 
                     <li class="nav-link">
-                        <a href="cadastro.php">
+                        <a href="Financiamento.php">
                             <i class='bi bi-person-plus ' ></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <span class="text nav-text">Cadastro</span>
+                            <span class="text nav-text">Financiamento</span>
                         </a>
                     </li>           
 

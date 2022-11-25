@@ -79,9 +79,9 @@
                     </li>
 
                     <li class="nav-link">
-                        <a href="cadastro.php">
+                        <a href="Financiamento.php">
                             <i class='bi bi-person-plus ' ></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <span class="text nav-text">Cadastro</span>
+                            <span class="text nav-text">Financiamento</span>
                         </a>
 
                     </li>              
@@ -291,7 +291,7 @@
                         <!-- Page Heading -->
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
                             <h1 class="h3 mb-0 text-gray-800" id="dash"><?php echo "Seja bem vindo ".$_SESSION['nome']."!";  ?></h1>
-                            <a href="../arquivos/vendas.pdf" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_blank"><i
+                            <a href="../arquivos/vendas_relat.pdf" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_blank"><i
                                     class="fas fa-download fa-sm text-white-50"></i> Relatório Mensal</a>
                         </div>
     
@@ -334,13 +334,13 @@
 
                                                     <!-- Exibir Valor Total de vendas no ano -->
                                                     <?php
-                                                        $query=("SELECT sum(vl_venda) as total_vendas_ano from `vendas` WHERE `dt_venda` BETWEEN '2022-01-01' AND '2022-12-31';");
+                                                        $query=("SELECT count(vl_venda) as total_vendas_ano from `vendas` WHERE `dt_venda` BETWEEN '2022-01-01' AND '2022-12-31';");
                                                         $vendas_ano = $conn->prepare($query);
                                                         $vendas_ano->execute();
                                                         $row=$vendas_ano->fetch();
 
                                                     ?>
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?= 'R$ '.$row['total_vendas_ano']; ?></div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?= $row['total_vendas_ano']; ?></div>
                                             </div>
                                             <div class="col-auto">
                                                 <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -358,14 +358,14 @@
                                             <div class="col mr-2">
                                                 <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Lucro Mensal</div>
                                                 <?php
-                                                    $query=("SELECT sum(vl_venda-vl_compra) as lucro_mensal from `vendas` WHERE `dt_venda` BETWEEN '2022-11-01' AND '2022-11-30';");
+                                                    $query="SELECT SUM(vendas.vl_venda-veiculos.vl_compra) as Lucro_mensal from veiculos, vendas WHERE vendas.dt_venda BETWEEN '2022-11-01' AND '2022-11-31' AND vendas.id_venda = veiculos.id_veiculo;";
                                                     $lucro_mensal = $conn->prepare($query);
                                                     $lucro_mensal->execute();
                                                     $row=$lucro_mensal->fetch();
                                                 ?>
                                                 <div class="row no-gutters align-items-center">
                                                     <div class="col-auto">
-                                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?= 'R$ '.$row['lucro_mensal'] ?></div>
+                                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?= 'R$ '.$row['Lucro_mensal'] ?></div>
                                                     </div>
                                                     <div class="col">
                                                         <div class="progress progress-sm mr-2">
@@ -395,7 +395,7 @@
 
                                                     <!-- Valor Lucro Anual de Vendas-->
                                                     <?php
-                                                        $query=("SELECT sum(vl_venda-vl_compra) as Lucro_anual from `vendas` WHERE `dt_venda` BETWEEN '2022-01-01' AND '2022-12-31';");
+                                                        $query="SELECT SUM(vendas.vl_venda-veiculos.vl_compra) as Lucro_anual from veiculos, vendas WHERE vendas.dt_venda BETWEEN '2022-01-01' AND '2022-12-31' AND vendas.id_venda = veiculos.id_veiculo;";
                                                         $Lucro_anual = $conn->prepare($query);
                                                         $Lucro_anual->execute();
                                                         $row=$Lucro_anual->fetch();
@@ -739,6 +739,8 @@
 
 </body>
     <script>
+
+        
         $(document).ready(()=>{
             //$('section').addClass('bg-light');
 

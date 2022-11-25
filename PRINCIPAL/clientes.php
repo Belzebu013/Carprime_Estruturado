@@ -111,9 +111,9 @@
                     </li>
 
                     <li class="nav-link">
-                        <a href="cadastro.php">
+                        <a href="Financiamento.php">
                             <i class='bi bi-person-plus ' ></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <span class="text nav-text">Cadastro</span>
+                            <span class="text nav-text">Financiamento</span>
                         </a>
                     </li>         
 
@@ -190,6 +190,9 @@
         $telefone = $_POST['telefone'];
 
         try{
+        if(empty($dt_nasc = $_POST['dt_nasc'])){
+            throw new Exception();
+        }else{
         $gravar = $conn -> prepare('INSERT INTO `clientes` (`id_cliente`, `nm_cliente`, `cpf_cliente`, `email_cliente`, `ds_endereco`, `dt_nascimento`, `nm_telefone`) VALUES (NULL, ?, ?, ?, ?, ?, ?);');
         $gravar -> bindParam(1, $nome);
         $gravar -> bindParam(2, $cpf);
@@ -199,8 +202,8 @@
         $gravar -> bindParam(6, $telefone);
         $gravar -> execute();
         echo "<h4>".$nome." Cadastrado com Sucesso</h4>";
-
-        }catch(PDOException $e){
+        }
+        }catch(Exception $e){
             echo "<h4>Houve um erro ao efetuar o cadastro, por favor verifique os dados e tente novamente!</h4>";
         }
     
