@@ -42,7 +42,7 @@
 				if(isset($_POST['logar'])){
 					$user = $_POST['user'];
 					$senha = $_POST['senha'];
-					$login = $conn -> prepare('SELECT * FROM `cadastro` WHERE `user_cad` = ? AND `senha_cad` = ?');
+					$login = $conn -> prepare('SELECT * FROM `cadastro` WHERE `user_cad` = ? AND `senha_cad` = md5(?)');
 					$login -> bindValue(1, $user);
 					$login -> bindValue(2, $senha);
 					$login -> execute();

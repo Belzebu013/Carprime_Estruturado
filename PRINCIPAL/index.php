@@ -78,7 +78,7 @@
                         </a>
                     </li>
 
-                    <li class="nav-link">
+                        <li class="nav-link">
                         <a href="Financiamento.php">
                             <i class='bi bi-person-plus ' ></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <span class="text nav-text">Financiamento</span>
@@ -290,7 +290,7 @@
     
                         <!-- Page Heading -->
                         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                            <h1 class="h3 mb-0 text-gray-800" id="dash"><?php echo "Seja bem vindo ".$_SESSION['nome']."!";  ?></h1>
+                            <h1 class="h3 mb-0 text-gray-800" id="dash"><?php $x = isset($_SESSION['nome']) && $_SESSION['nome'] != NULL ? "Seja bem vindo ".$_SESSION['nome']."!" : 'Seja Bem Vindo';echo $x;  ?></h1>
                             <a href="../arquivos/vendas_relat.pdf" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" target="_blank"><i
                                     class="fas fa-download fa-sm text-white-50"></i> Relatório Mensal</a>
                         </div>
